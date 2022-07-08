@@ -1,0 +1,30 @@
+services:
+  db:
+    container_name: aasee-db
+    image: mysql:5.7
+    platform: linux/x86_64
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - dse-network
+
+  app:
+    container_name: aasee-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    networks:
+      - dse-network
+    ports:
+      - 8000:8000
+
+networks:
+  dse-network:
+    driver: bridge
+
+volumes:
+  db-data: {}
